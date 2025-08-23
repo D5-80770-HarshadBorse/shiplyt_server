@@ -1,4 +1,4 @@
-name: Build and Copy JAR to EC2
+name: Build and Deploy to EC2
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main   # runs only when PRs are merged into main
 
 jobs:
-  build-copy:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +20,23 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests   # 👈 builds JAR in target/
+        run: mvn clean package -DskipTests   # builds JAR in target/
 
-      - name: Copy JAR to EC2
+      - name: Upload JAR to EC2 (/tmp/target)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/*.jar"
-          target: "/tmp/"
+          target: "/tmp/target/"   # 👈 matches your deploy.sh
+
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            chmod +x ~/deploy.sh
+            ~/deploy.sh
