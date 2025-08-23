@@ -28,9 +28,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "target/*-SNAPSHOT.jar"   # 👈 build output in root/target
+          source: "target/*.jar"
           target: "/tmp/myserver.jar"
-
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
