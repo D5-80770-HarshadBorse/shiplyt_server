@@ -1,10 +1,13 @@
 package com.shiplyt.model.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 public class AuthResponse {
-    private String token;
+	private String token;
+	private String name;
+	private String phone;
+	private String email;
 }
