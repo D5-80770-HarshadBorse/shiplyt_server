@@ -3,6 +3,7 @@ package com.shiplyt.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import com.shiplyt.model.entity.Driver;
 import com.shiplyt.model.entity.User;
 import com.shiplyt.repository.DriverRepository;
 import com.shiplyt.repository.UserRepository;
+import com.shiplyt.security.CustomUserDetails;
 import com.shiplyt.security.JwtUtil;
 
 import jakarta.validation.Valid;
@@ -57,13 +59,18 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public AuthResponse login(@RequestBody LoginRequest request) {
+		User user;
 		try {
-			authManager
+			Authentication authentication = authManager
 					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+			CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+			user = customUserDetails.getUser();
 		} catch (Exception ex) {
 			throw new InvalidCredentialsException("Invalid email or password", HttpStatus.BAD_REQUEST);
 		}
 		String token = jwtUtil.generateToken(request.getEmail());
-		return new AuthResponse(token);
+		return AuthResponse.builder().token(token).email(user.getEmail()).name(user.getName()).phone(user.getPhone())
+				.build();
 	}
 }
