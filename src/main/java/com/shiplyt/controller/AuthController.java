@@ -71,6 +71,6 @@ public class AuthController {
 		}
 		String token = jwtUtil.generateToken(request.getEmail());
 		return AuthResponse.builder().token(token).email(user.getEmail()).name(user.getName()).phone(user.getPhone())
-				.build();
+				.role(user.getRole().toString()).build();
 	}
 }
