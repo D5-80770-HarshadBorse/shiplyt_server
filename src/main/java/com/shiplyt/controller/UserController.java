@@ -32,7 +32,7 @@ public class UserController {
 				.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail()).phone(user.getPhone()).build());
 	}
 
-	@GetMapping("/current-user")
+	@GetMapping("/current")
 	public ResponseEntity<AuthResponse> getCurrentUser() {
 		User user = securityUtil.getLoggedInUser();
 		return ResponseEntity
