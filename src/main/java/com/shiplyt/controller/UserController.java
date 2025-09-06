@@ -12,6 +12,7 @@ import com.shiplyt.model.dto.AuthResponse;
 import com.shiplyt.model.dto.UserUpdateRequest;
 import com.shiplyt.model.entity.User;
 import com.shiplyt.service.UserService;
+import com.shiplyt.util.SecurityUtil;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,18 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+	private final SecurityUtil securityUtil;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<AuthResponse> getUser(@PathVariable Long id) {
 		User user = userService.getUserById(id);
+		return ResponseEntity
+				.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail()).phone(user.getPhone()).build());
+	}
+
+	@GetMapping("/current-user")
+	public ResponseEntity<AuthResponse> getCurrentUser() {
+		User user = securityUtil.getLoggedInUser();
 		return ResponseEntity
 				.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail()).phone(user.getPhone()).build());
 	}
