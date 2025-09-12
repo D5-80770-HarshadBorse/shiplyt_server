@@ -35,15 +35,15 @@ public class UserController {
 	@GetMapping("/current")
 	public ResponseEntity<AuthResponse> getCurrentUser() {
 		User user = securityUtil.getLoggedInUser();
-		return ResponseEntity
-				.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail()).phone(user.getPhone()).build());
+		return ResponseEntity.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail())
+				.phone(user.getPhone()).id(user.getId()).build());
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<AuthResponse> updateUser(@PathVariable Long id,
 			@Valid @RequestBody UserUpdateRequest request) {
 		User user = userService.updateUser(id, request);
-		return ResponseEntity
-				.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail()).phone(user.getPhone()).build());
+		return ResponseEntity.ok(AuthResponse.builder().name(user.getName()).email(user.getEmail())
+				.phone(user.getPhone()).id(user.getId()).build());
 	}
 }
