@@ -14,6 +14,8 @@ public interface OrderService {
 
 	List<Order> getAllOrders();
 
+	List<Order> getUserAllOrders();
+
 	Order updateOrderStatus(Long id, Order.Status status);
 
 	void deleteOrder(Long id);

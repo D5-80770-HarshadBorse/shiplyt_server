@@ -73,4 +73,10 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.existsByUserAndPickupLatAndPickupLngAndDropLatAndDropLng(user, request.getPickupLat(),
 				request.getPickupLng(), request.getDropLat(), request.getDropLng());
 	}
+
+	@Override
+	public List<Order> getUserAllOrders() {
+		User loggedInUser = securityUtil.getLoggedInUser();
+		return orderRepository.findByUser(loggedInUser);
+	}
 }

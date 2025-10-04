@@ -18,7 +18,7 @@ import com.shiplyt.model.entity.Order;
 import com.shiplyt.service.OrderService;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api")
 public class OrderController {
 
 	private final OrderService orderService;
@@ -27,15 +27,20 @@ public class OrderController {
 		this.orderService = orderService;
 	}
 
-	@PostMapping
+	@PostMapping("/orders")
 	public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
 		Order savedOrder = orderService.createOrder(orderRequest);
 		return ResponseEntity.ok(savedOrder);
 	}
 
-	@GetMapping
+	@GetMapping("/orders")
 	public ResponseEntity<List<Order>> getAllOrders() {
 		return ResponseEntity.ok(orderService.getAllOrders());
+	}
+
+	@GetMapping("/orders/user")
+	public ResponseEntity<List<Order>> getAllUserOrders() {
+		return ResponseEntity.ok(orderService.getUserAllOrders());
 	}
 
 	@GetMapping("/{id}")
